@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Report</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+
+<i class="fas fa-user-graduate"></i>
+
+<h2>CAMS</h2>
+
+</div>
+
+<ul>
+
+<li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+
+<li><a href="/add"><i class="fas fa-user-plus"></i> Add Student</a></li>
+
+<li><a href="/students"><i class="fas fa-users"></i> Student List</a></li>
+
+<li><a href="/attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+
+<li><a href="/report"><i class="fas fa-chart-bar"></i> Report</a></li>
+
+<li><a href="/logout"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+
+</ul>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+
+<h2>Attendance Report</h2>
+
+<div class="right-top">
+
+<div class="search">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search Student...">
+
+</div>
+
+<div class="teacher">
+
+<i class="fas fa-user-circle"></i>
+
+Teacher
+
+</div>
+
+</div>
+
+</div>
+
+<div class="table-box">
+
+<div class="table-header">
+
+<h3>Attendance Report</h3>
+
+<button onclick="window.print()" class="add-btn">
+
+<i class="fas fa-print"></i>
+
+Print Report
+
+</button>
+
+</div>
+
+<table id="reportTable">
+
+<tr>
+
+<th>Roll No</th>
+
+<th>Name</th>
+
+<th>Department</th>
+
+<th>Present</th>
+
+<th>Absent</th>
+
+<th>Attendance %</th>
+
+<th>Status</th>
+
+</tr>
+{% for student in students %}
+
+{% set total = student.present + student.absent %}
+
+<tr>
+
+<td>{{ student.roll }}</td>
+
+<td>{{ student.name }}</td>
+
+<td>{{ student.department }}</td>
+
+<td>{{ student.present }}</td>
+
+<td>{{ student.absent }}</td>
+
+<td>
+
+{% if total == 0 %}
+
+0%
+
+{% else %}
+
+{{ ((student.present / total) * 100) | round(1) }}%
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if total == 0 %}
+
+<span style="color:gray;font-weight:bold;">
+No Data
+</span>
+
+{% elif ((student.present / total) * 100) >= 75 %}
+
+<span style="color:green;font-weight:bold;">
+Good
+</span>
+
+{% elif ((student.present / total) * 100) >= 50 %}
+
+<span style="color:orange;font-weight:bold;">
+Average
+</span>
+
+{% else %}
+
+<span style="color:red;font-weight:bold;">
+Low
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+let filter = this.value.toLowerCase();
+
+let rows = document.querySelectorAll("#reportTable tr");
+
+for(let i = 1; i < rows.length; i++){
+
+let text = rows[i].innerText.toLowerCase();
+
+rows[i].style.display = text.includes(filter) ? "" : "none";
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

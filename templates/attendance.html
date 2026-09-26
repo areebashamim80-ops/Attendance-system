@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mark Attendance</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+
+<i class="fas fa-user-graduate"></i>
+
+<h2>CAMS</h2>
+
+</div>
+
+<ul>
+
+<li><a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+
+<li><a href="/add"><i class="fas fa-user-plus"></i> Add Student</a></li>
+
+<li><a href="/students"><i class="fas fa-users"></i> Student List</a></li>
+
+<li><a href="/attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+
+<li><a href="/report"><i class="fas fa-chart-bar"></i> Report</a></li>
+
+<li><a href="/logout"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+
+</ul>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+
+<h2>Mark Attendance</h2>
+
+<div class="right-top">
+
+<div class="search">
+
+<input type="text" id="searchInput" placeholder="Search Student...">
+
+</div>
+
+<div class="teacher">
+
+<i class="fas fa-user-circle"></i>
+
+Teacher
+
+</div>
+
+</div>
+
+</div>
+
+<form method="POST">
+
+<div class="table-box">
+
+<h3>Today's Attendance</h3>
+
+<br>
+
+<table id="attendanceTable">
+
+<tr>
+
+<th>Roll No</th>
+
+<th>Name</th>
+
+<th>Department</th>
+
+<th>Class</th>
+
+<th>Status</th>
+
+</tr>
+{% for student in students %}
+
+<tr>
+
+<td>{{ student.roll }}</td>
+
+<td>{{ student.name }}</td>
+
+<td>{{ student.department }}</td>
+
+<td>{{ student.student_class }}</td>
+
+<td>
+
+<label>
+
+<input
+type="radio"
+name="attendance_{{ student.id }}"
+value="present"
+checked>
+
+Present
+
+</label>
+
+&nbsp;&nbsp;
+
+<label>
+
+<input
+type="radio"
+name="attendance_{{ student.id }}"
+value="absent">
+
+Absent
+
+</label>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<div style="text-align:center;">
+
+<button
+type="submit"
+class="submit-btn"
+style="width:250px;">
+
+<i class="fas fa-save"></i>
+
+Save Attendance
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+const searchInput=document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup",function(){
+
+let filter=this.value.toLowerCase();
+
+let rows=document.querySelectorAll("#attendanceTable tr");
+
+for(let i=1;i<rows.length;i++){
+
+let text=rows[i].innerText.toLowerCase();
+
+rows[i].style.display=text.includes(filter)?"":"none";
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>
